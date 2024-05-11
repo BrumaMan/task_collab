@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dart_openai/dart_openai.dart';
 import 'package:date_time_format/date_time_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,8 @@ class _TaskScreenState extends State<TaskScreen> {
   FirebaseFirestore db = FirebaseFirestore.instance;
   late TextEditingController descController;
   late dynamic owner = "";
+  bool generating = false;
+  List<OpenAIChatCompletionChoiceMessageModel> messages = [];
 
   @override
   void initState() {
@@ -41,6 +44,42 @@ class _TaskScreenState extends State<TaskScreen> {
     widget.taskData["finishDate"] == null
         ? widget.taskData["finishDate"] = ""
         : widget.taskData["finishDate"];
+
+    messages = [
+      OpenAIChatCompletionChoiceMessageModel(
+          role: OpenAIChatMessageRole.user,
+          content: [
+            OpenAIChatCompletionChoiceMessageContentItemModel.text(
+                'Write a description in abbout 20 words and dont include the task name, for a task based off of its name, delimited by triple quotes """${widget.taskData["taskName"]}"""')
+          ])
+    ];
+  }
+
+  void generateDescription() {
+    if (generating) {
+      return;
+    }
+    setState(() => generating = true);
+    Stream<OpenAIStreamChatCompletionModel> chatStream = OpenAI.instance.chat
+        .createStream(model: "gpt-3.5-turbo", messages: messages);
+
+    debugPrint(descController.text);
+
+    descController.text = "";
+    chatStream.listen(
+      (event) {
+        final char = event.choices.first.delta.content?.first?.text ?? "";
+        descController.text = descController.text + char;
+
+        debugPrint(descController.text);
+      },
+      onDone: () {
+        setState(() {
+          widget.taskData["description"] = descController.text;
+          generating = false;
+        });
+      },
+    );
   }
 
   @override
@@ -50,11 +89,27 @@ class _TaskScreenState extends State<TaskScreen> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar.medium(
-            title: Text(widget.taskData["taskName"]),
+            title: Text(
+              widget.taskData["taskName"],
+              style: TextStyle(
+                  decoration: widget.taskData["completed"]
+                      ? TextDecoration.lineThrough
+                      : null),
+            ),
             leading: IconButton(
                 onPressed: () => Navigator.pop(context),
                 icon: const Icon(Icons.close)),
             actions: [
+              IconButton(
+                  onPressed: () {
+                    setState(() {
+                      widget.taskData["completed"] =
+                          widget.taskData["completed"] ? false : true;
+                    });
+                  },
+                  icon: Icon(widget.taskData["completed"]
+                      ? Icons.block
+                      : Icons.check)),
               IconButton(
                   onPressed: () {
                     db
@@ -70,7 +125,7 @@ class _TaskScreenState extends State<TaskScreen> {
                   icon: const Icon(
                     Icons.delete_outline,
                     color: Colors.red,
-                  ))
+                  )),
             ],
           ),
           const SliverPadding(padding: EdgeInsets.only(top: 18.0)),
@@ -87,6 +142,11 @@ class _TaskScreenState extends State<TaskScreen> {
                 onChanged: (p0) => setState(() {
                   widget.taskData["description"] = p0;
                 }),
+                suffix: IconButton(
+                    onPressed: () {
+                      generateDescription();
+                    },
+                    icon: Icon(Icons.auto_awesome)),
               ),
             ),
           ),

@@ -226,7 +226,8 @@ class _BoardScreenState extends State<BoardScreen> {
                                                                 .serverTimestamp(),
                                                             // "finishDate": "",
                                                             "createdAt": FieldValue
-                                                                .serverTimestamp()
+                                                                .serverTimestamp(),
+                                                            "completed": false
                                                           })
                                                           .then((value) =>
                                                               Navigator.of(
@@ -297,8 +298,15 @@ class _BoardScreenState extends State<BoardScreen> {
                                                       color: Theme.of(context)
                                                           .scaffoldBackgroundColor,
                                                     ),
-                                                    child:
-                                                        Text(data["taskName"]),
+                                                    child: Text(
+                                                      data["taskName"],
+                                                      style: TextStyle(
+                                                          decoration: data[
+                                                                  "completed"]
+                                                              ? TextDecoration
+                                                                  .lineThrough
+                                                              : null),
+                                                    ),
                                                   ),
                                                   onTap: () {
                                                     Navigator.of(context).push(

@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:task_collab/env/env.dart';
 import 'package:task_collab/firebase_options.dart';
 import 'package:task_collab/screens/home_screen.dart';
 import 'package:task_collab/screens/welcome_screen.dart';
@@ -9,6 +11,7 @@ import 'package:task_collab/screens/welcome_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  OpenAI.apiKey = Env.apiKey;
   runApp(const MyApp());
 }
 

@@ -15,7 +15,9 @@ class TextField2 extends StatefulWidget {
       this.onChanged,
       this.onEditingComplete,
       this.onSubmitted,
-      this.withBorder = true});
+      this.withBorder = true,
+      this.suffix,
+      this.fontSize});
 
   TextEditingController? controller;
   bool obscureText;
@@ -28,6 +30,8 @@ class TextField2 extends StatefulWidget {
   void Function()? onEditingComplete;
   void Function(String)? onSubmitted;
   bool withBorder;
+  Widget? suffix;
+  double? fontSize;
 
   @override
   State<TextField2> createState() => _TextField2State();
@@ -45,6 +49,8 @@ class _TextField2State extends State<TextField2> {
         onEditingComplete: widget.onEditingComplete,
         onSubmitted: widget.onSubmitted,
         readOnly: widget.readOnly,
+        maxLines: null,
+        style: TextStyle(fontSize: widget.fontSize),
         decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
             hintText: widget.hintText,
@@ -52,7 +58,8 @@ class _TextField2State extends State<TextField2> {
             helperText: widget.helperText,
             border: widget.withBorder
                 ? OutlineInputBorder(gapPadding: 1.0)
-                : InputBorder.none),
+                : InputBorder.none,
+            suffixIcon: widget.suffix),
       ),
     );
   }
