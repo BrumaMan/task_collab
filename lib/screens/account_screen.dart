@@ -30,11 +30,11 @@ class _AccountScreenState extends State<AccountScreen> {
         title: const Text("Account"),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             ListTile(
-              contentPadding: EdgeInsets.symmetric(horizontal: 0.0),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
               leading: Container(
                 decoration: BoxDecoration(
                     color: Theme.of(context).primaryColorLight,
@@ -44,18 +44,19 @@ class _AccountScreenState extends State<AccountScreen> {
                       right: 8.0, left: 8.0, top: 4.0, bottom: 4.0),
                   child: Text(
                     getInitials(),
-                    style: TextStyle(fontSize: 32.0),
+                    style: const TextStyle(fontSize: 32.0),
                   ),
                 ),
               ),
               title: Text(
                 currentUser.currentUser?.displayName ?? "",
-                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                    fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
               subtitle: Text(currentUser.currentUser?.email ?? ""),
             ),
             Container(
-              margin: EdgeInsets.only(top: 12.0, bottom: 12.0),
+              margin: const EdgeInsets.only(top: 12.0, bottom: 12.0),
               decoration: BoxDecoration(
                   color: Theme.of(context).scaffoldBackgroundColor,
                   boxShadow: kElevationToShadow[1],
@@ -63,12 +64,12 @@ class _AccountScreenState extends State<AccountScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: ListTile.divideTiles(context: context, tiles: [
-                  ListTile(
+                  const ListTile(
                     contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
                     leading: Icon(Icons.sort),
                     title: Text("Licenses"),
                   ),
-                  ListTile(
+                  const ListTile(
                     contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
                     leading: Icon(Icons.smartphone),
                     title: Text("App version"),
@@ -83,7 +84,7 @@ class _AccountScreenState extends State<AccountScreen> {
               },
               color: Theme.of(context).scaffoldBackgroundColor,
               minWidth: double.maxFinite,
-              child: Text(
+              child: const Text(
                 "Log out",
                 style: TextStyle(fontSize: 16.0, color: Colors.red),
               ),

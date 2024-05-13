@@ -50,7 +50,7 @@ class _TaskScreenState extends State<TaskScreen> {
           role: OpenAIChatMessageRole.user,
           content: [
             OpenAIChatCompletionChoiceMessageContentItemModel.text(
-                'Write a description in abbout 20 words and dont include the task name, for a task based off of its name, delimited by triple quotes """${widget.taskData["taskName"]}"""')
+                'Write a description in about 20 words and dont include the task name, for a task based off of its name, delimited by triple quotes """${widget.taskData["taskName"]}"""')
           ])
     ];
   }
